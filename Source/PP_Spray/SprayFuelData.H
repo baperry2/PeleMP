@@ -4,6 +4,8 @@
 #include "PelePhysics.H"
 #include <AMReX_RealVect.H>
 
+#include "LiquidProperties.H"
+
 // Spray flags and indices
 struct SprayComps
 {
@@ -108,19 +110,22 @@ struct SprayData
   // If particle is updated half dt or whole dt
   amrex::Real dtmod = 0.5;
   amrex::RealVect body_force = amrex::RealVect::TheZeroVector();
+  /*
   amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> critT;
   amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> boilT;
   amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> cp;
   amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> latent;
-  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> ref_latent;
+  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM> ref_latent; */
   // 3 coefficients for Antoine equation and conversion to appropriate units
-  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> psat_coef;
-  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> rho_coef;
-  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> lambda_coef;
-  amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> mu_coef;
+  //amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> psat_coef;
+  // amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> rho_coef;
+  // amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> lambda_coef;
+  //amrex::GpuArray<amrex::Real, SPRAY_FUEL_NUM * 4> mu_coef;
   amrex::GpuArray<int, SPRAY_FUEL_NUM> indx = {{-1}};
   amrex::GpuArray<int, SPRAY_FUEL_NUM> dep_indx = {{-1}};
+  pele::mp::liqprop::LiqPropType liqprops;
 
+  /*
   AMREX_GPU_HOST_DEVICE
   AMREX_FORCE_INLINE
   amrex::Real rhoL(const amrex::Real& T, const int spf) const
@@ -130,7 +135,7 @@ struct SprayData
     amrex::Real c = rho_coef[4 * spf + 2];
     amrex::Real d = rho_coef[4 * spf + 3];
     return a + T * (b + T * (c + T * d));
-  }
+    }
 
   AMREX_GPU_HOST_DEVICE
   AMREX_FORCE_INLINE
@@ -152,7 +157,7 @@ struct SprayData
     amrex::Real c = mu_coef[4 * spf + 2];
     amrex::Real d = mu_coef[4 * spf + 3];
     return a + ((d / T + c) / T + b) / T;
-  }
+    }
 
   // Estimate the boil temperature
   AMREX_GPU_HOST_DEVICE
@@ -179,6 +184,7 @@ struct SprayData
     }
   }
 
+
   AMREX_GPU_HOST_DEVICE
   AMREX_FORCE_INLINE
   amrex::Real psat(const amrex::Real& T, const int spf) const
@@ -188,7 +194,7 @@ struct SprayData
     amrex::Real c = psat_coef[4 * spf + 2];
     amrex::Real d = psat_coef[4 * spf + 3];
     return d * std::pow(10., a - b / (T + c));
-  }
+    } */
 };
 
 #endif

@@ -103,17 +103,18 @@ SprayParticleContainer::readSprayParams(int& particle_verbose)
       has_dep_spec = true;
       pp.getarr("dep_fuel_species", dep_fuel_names);
     }
+    /*
     getInpVal(m_sprayData->critT.data(), pp, fuel_names.data(), "crit_temp");
     getInpVal(m_sprayData->boilT.data(), pp, fuel_names.data(), "boil_temp");
     getInpVal(m_sprayData->cp.data(), pp, fuel_names.data(), "cp");
     getInpVal(m_sprayData->ref_latent.data(), pp, fuel_names.data(), "latent");
-
-    getInpCoef(
-      m_sprayData->lambda_coef.data(), pp, fuel_names.data(), "lambda");
-    getInpCoef(m_sprayData->psat_coef.data(), pp, fuel_names.data(), "psat");
-    getInpCoef(
-      m_sprayData->rho_coef.data(), pp, fuel_names.data(), "rho", true);
-    getInpCoef(m_sprayData->mu_coef.data(), pp, fuel_names.data(), "mu");
+    */
+    //getInpCoef(
+    //  m_sprayData->lambda_coef.data(), pp, fuel_names.data(), "lambda");
+    //getInpCoef(m_sprayData->psat_coef.data(), pp, fuel_names.data(), "psat");
+    //getInpCoef(
+    //  m_sprayData->rho_coef.data(), pp, fuel_names.data(), "rho", true);
+    // getInpCoef(m_sprayData->mu_coef.data(), pp, fuel_names.data(), "mu");
     for (int i = 0; i < nfuel; ++i) {
       m_sprayFuelNames[i] = fuel_names[i];
       if (has_dep_spec) {
@@ -121,7 +122,7 @@ SprayParticleContainer::readSprayParams(int& particle_verbose)
       } else {
         m_sprayDepNames[i] = m_sprayFuelNames[i];
       }
-      m_sprayData->latent[i] = m_sprayData->ref_latent[i];
+      //m_sprayData->latent[i] = m_sprayData->ref_latent[i];
     }
   }
 
@@ -161,6 +162,9 @@ SprayParticleContainer::readSprayParams(int& particle_verbose)
 
   m_sprayData->num_ppp = parcel_size;
   m_sprayData->ref_T = spray_ref_T;
+
+  // Initialize Liquid Properties
+  pele::mp::liqprop::InitLiqProps<pele::mp::liqprop::LiqPropType>()(&m_sprayData->liqprops, fuel_names);
 
   // List of known derived spray quantities
   std::vector<std::string> derive_names = {
